@@ -3,11 +3,11 @@
 ## API 명세서
 |기능|method|url|request|response|status|
 |----|---|---|---|---|---|
-|신규일정 생성|`POST`  |/api/schedules              |요청 body  |등록 정보      |200: 정상 등록, 400: 비정상 값|
+|신규일정 생성|`POST`  |/api/schedules              |요청 body  |등록 정보      |200: 정상 등록|
 |전체일정 조회|`GET`   |/api/schedules              |요청 param |다건 응답 정보  |200: 정상 조회|
-|선택일정 조회|`GET`   |/api/schedules/{schedule_id}|요청 param |단건 응답 정보  |200: 정상 조회, 404: 일정이 사라짐|
-|선택일정 수정|`PUT`   |/api/schedules/{schedule_id}|요청 body  |수정 정보      |200: 정상 수정, 400: 비정상 값, 404: 일정이 사라짐|
-|선택일정 삭제|`DELETE`|/api/schedules/{schedule_id}|요청 param |삭제 정보      |200: 정상 삭제, 404: 일정이 사라짐|
+|선택일정 조회|`GET`   |/api/schedules/{schedule_id}|요청 param |단건 응답 정보  |200: 정상 조회|
+|선택일정 수정|`PUT`   |/api/schedules/{schedule_id}|요청 body  |수정 정보      |200: 정상 수정|
+|선택일정 삭제|`DELETE`|/api/schedules/{schedule_id}|요청 param |삭제 정보      |200: 정상 삭제|
 
 
 ## ERD
