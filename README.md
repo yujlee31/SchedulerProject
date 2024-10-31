@@ -3,17 +3,249 @@
 ## API 명세서
 |기능|method|url|request|response|status|
 |----|---|---|---|---|---|
-|신규일정 생성|`POST`  |/api/schedules              |요청 body  |등록 정보      |200: 정상 등록|
+|신규일정 생성|`POST`  |/api/schedules              |요청 body  |등록 정보      |201: 정상 등록|
 |전체일정 조회|`GET`   |/api/schedules              |요청 param |다건 응답 정보  |200: 정상 조회|
 |선택일정 조회|`GET`   |/api/schedules/{schedule_id}|요청 param |단건 응답 정보  |200: 정상 조회|
-|선택일정 수정|`PUT`   |/api/schedules/{schedule_id}|요청 body  |수정 정보      |200: 정상 수정|
-|선택일정 삭제|`DELETE`|/api/schedules/{schedule_id}|요청 param |삭제 정보      |200: 정상 삭제|
+|선택일정 수정|`PATCH` |/api/schedules/{schedule_id}|요청 body  |수정 정보      |200: 정상 수정|
+|선택일정 삭제|`DELETE`|/api/schedules/{schedule_id}|요청 param |삭제 정보      |204: 정상 삭제|
+
+<details>
+  <summary>신규일정 생성</summary>
+<table>
+<tr>
+<td>  </td> <td> Request </td> <td> Response </td>
+</tr>
+<tr>
+<td> Start Line </td>
+<td> POST  /api/schedules  HTTP/1.1</td>
+<td> HTTP/1.1  201  Created </td>
+</tr>
+<tr>
+<td> Header </td>
+<td>Content-Type:application/json</td>
+<td>Content-Type:application/json</td>
+</tr>
+<tr>
+<td> Empty Line </td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td> Message Body</td>
+<td>
+
+```json
+{
+	"title" : "제목",
+	"content" : "내용",
+	"passwd" : "비밀번호",
+	"userid" : "작성자"
+	}
+```
+ 
+</td>
+<td>
+
+```json
+{
+	"id" : "번호",
+	"title" : "제목",
+	"content" : "내용",
+	"passwd" : "비밀번호",
+	"userid" : "작성자",
+	"regtime" : "생성일시",
+	"edittime" : "수정일시"
+	}
+```
+ 
+</td>
+</tr>
+</table>
+</details>
 
 
+<details>
+  <summary>전체일정 조회</summary>
+<table>
+<tr>
+<td>  </td> <td> Request </td> <td> Response </td>
+</tr>
+<tr>
+<td> Start Line </td>
+<td> GET  /api/schedules  HTTP/1.1</td>
+<td> HTTP/1.1  200  OK </td>
+</tr>
+<tr>
+<td> Header </td>
+<td>Host:localhost:8080</td>
+<td>Content-Type:application/json</td>
+</tr>
+<tr>
+<td> Empty Line </td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td> Message Body</td>
+<td>
+ 
+</td>
+<td>
+
+```json
+{
+	"id" : "번호",
+	"title" : "제목",
+	"content" : "내용",
+	"passwd" : "비밀번호",
+	"userid" : "작성자",
+	"regtime" : "생성일시",
+	"edittime" : "수정일시"
+	}
+```
+ 
+</td>
+</tr>
+</table>
+</details>
+
+
+<details>
+  <summary>선택일정 조회</summary>
+<table>
+<tr>
+<td>  </td> <td> Request </td> <td> Response </td>
+</tr>
+<tr>
+<td> Start Line </td>
+<td> GET  /api/schedules?id={id}  HTTP/1.1</td>
+<td> HTTP/1.1  200  OK </td>
+</tr>
+<tr>
+<td> Header </td>
+<td>Host:localhost:8080</td>
+<td>Content-Type:application/json</td>
+</tr>
+<tr>
+<td> Empty Line </td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td> Message Body</td>
+<td>
+ 
+</td>
+<td>
+
+```json
+{
+	"id" : "번호",
+	"title" : "제목",
+	"content" : "내용",
+	"passwd" : "비밀번호",
+	"userid" : "작성자",
+	"regtime" : "생성일시",
+	"edittime" : "수정일시"
+	}
+```
+ 
+</td>
+</tr>
+</table>
+</details>
+
+
+<details>
+  <summary>선택일정 수정</summary>
+<table>
+<tr>
+<td>  </td> <td> Request </td> <td> Response </td>
+</tr>
+<tr>
+<td> Start Line </td>
+<td> PATCH  /api/schedules?id={id}  HTTP/1.1</td>
+<td> HTTP/1.1  200  OK </td>
+</tr>
+<tr>
+<td> Header </td>
+<td>Content-Type:application/json</td>
+<td>Content-Type:application/json</td>
+</tr>
+<tr>
+<td> Empty Line </td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td> Message Body</td>
+<td>
+
+```json
+{
+	"title" : "제목",
+	"content" : "내용",
+	"userid" : "작성자"
+	}
+```
+ 
+</td>
+<td>
+
+```json
+{
+	"id" : "번호",
+	"title" : "제목",
+	"content" : "내용",
+	"passwd" : "비밀번호",
+	"userid" : "작성자",
+	"regtime" : "생성일시",
+	"edittime" : "수정일시"
+	}
+```
+ 
+</td>
+</tr>
+</table>
+</details>
+
+
+<details>
+  <summary>선택일정 삭제</summary>
+<table>
+<tr>
+<td>  </td> <td> Request </td> <td> Response </td>
+</tr>
+<tr>
+<td> Start Line </td>
+<td> DELETE  /api/schedules?id={id}  HTTP/1.1</td>
+<td> HTTP/1.1  200  OK </td>
+</tr>
+<tr>
+<td> Header </td>
+<td>Host: localhost:8080</td>
+<td></td>
+</tr>
+<tr>
+<td> Empty Line </td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td> Message Body</td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</details>
+
+---
 ## ERD
+![ERD](erd_SchedulerProject.png)
 https://www.erdcloud.com/d/sJoeoXvDutmdC4neW
 
 
+---
 ## SQL
 ```sql
 -- 테이블 생성 QUERY from ERDCLOUD
