@@ -282,7 +282,42 @@ ALTER TABLE `schedule` ADD CONSTRAINT `FK_user_TO_schedule_1` FOREIGN KEY (
 REFERENCES `user` (
 	`id`
 );
+-->
+use schedule;
 
+# CREATE TABLE memo
+# (
+#     id       BIGINT       AUTO_INCREMENT PRIMARY KEY COMMENT '메모 식별자',
+#     title    VARCHAR(100) NOT NULL COMMENT '제목',
+#     contents TEXT COMMENT '내용'
+# );
+
+CREATE TABLE schedule
+(
+    id       BIGINT AUTO_INCREMENT primary key comment '일정 식별자',
+    title    varchar(100) NOT NULL COMMENT '제목',
+    content  TEXT COMMENT '내용',
+    user_id  bigint not null comment '작성자',
+    passwd   varchar(50)  NOT NULL COMMENT '작성글 비밀번호',
+    regtime  datetime comment '등록일시',
+    edittime datetime comment '수정일시'
+);
+
+CREATE TABLE user
+(
+    user_id     bigint  primary key comment '유저 식별자',
+    name        varchar(50) not null comment '이름',
+    email       varchar(100) not null comment '이메일',
+    regtime  datetime comment '등록일시',
+    edittime datetime comment '수정일시'
+);
+
+ALTER TABLE `schedule` ADD CONSTRAINT `FK_user_TO_schedule_1` FOREIGN KEY (
+                                                                           `user_id`
+    )
+    REFERENCES `user` (
+                       `user_id`
+        );
 
 
 -- 일정 생성 QUERY
