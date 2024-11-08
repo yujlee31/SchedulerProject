@@ -6,8 +6,8 @@
 |신규일정 생성|`POST`  |/api/schedules              |요청 body  |등록 정보      |201: 정상 등록|
 |전체일정 조회|`GET`   |/api/schedules              |요청 param |다건 응답 정보  |200: 정상 조회|
 |선택일정 조회|`GET`   |/api/schedules/{schedule_id}|요청 param |단건 응답 정보  |200: 정상 조회|
-|선택일정 수정|`PATCH` |/api/schedules/{schedule_id}|요청 body  |수정 정보      |200: 정상 수정|
-|선택일정 삭제|`DELETE`|/api/schedules/{schedule_id}|요청 param |삭제 정보      |204: 정상 삭제|
+|선택일정 수정|`PATCH` |/api/schedules/{schedule_id}|요청 body  |수정 정보      |200: 정상 수정, 403: 비밀번호오류|
+|선택일정 삭제|`DELETE`|/api/schedules/{schedule_id}|요청 param |삭제 정보      |200: 정상 삭제, 403: 비밀번호오류|
 
 <details>
   <summary>신규일정 생성</summary>
@@ -38,8 +38,8 @@
 {
 	"title" : "제목",
 	"content" : "내용",
-	"passwd" : "비밀번호",
-	"userid" : "작성자"
+	"userId" : "작성자",
+	"passwd" : "비밀번호"
 	}
 ```
  
@@ -52,7 +52,7 @@
 	"title" : "제목",
 	"content" : "내용",
 	"passwd" : "비밀번호",
-	"userid" : "작성자",
+	"userId" : "작성자",
 	"regtime" : "생성일시",
 	"edittime" : "수정일시"
 	}
@@ -90,6 +90,14 @@
 <td>
  
 </td>
+
+```json
+{
+	"userId" : "작성자",
+	"edittime" : "수정일시"
+	}
+```
+
 <td>
 
 ```json
@@ -164,7 +172,7 @@
 </tr>
 <tr>
 <td> Start Line </td>
-<td> PATCH  /api/schedules?id={id}  HTTP/1.1</td>
+<td> PATCH  /api/schedules/{id}  HTTP/1.1</td>
 <td> HTTP/1.1  200  OK </td>
 </tr>
 <tr>
@@ -185,7 +193,8 @@
 {
 	"title" : "제목",
 	"content" : "내용",
-	"userid" : "작성자"
+	"userId" : "작성자",
+	"passwd" : "비밀번호"
 	}
 ```
  
@@ -233,7 +242,15 @@
 </tr>
 <tr>
 <td> Message Body</td>
-<td></td>
+<td>
+
+```json
+{
+	"passwd" : "비밀번호"
+	}
+```
+ 
+</td>
 <td></td>
 </tr>
 </table>
@@ -248,50 +265,7 @@ https://www.erdcloud.com/d/sJoeoXvDutmdC4neW
 ---
 ## SQL
 ```sql
--- 테이블 생성 QUERY from ERDCLOUD
-CREATE TABLE `schedule` (
-	`id`	int(10)	NOT NULL,
-	`userid`	int(10)	NOT NULL,
-	`title`	varchar(50)	NULL,
-	`content`	varchar(200)	NULL,
-	`passwd`	varchar(10)	NOT NULL,
-	`regtime`	datetime	NULL,
-	`edittime`	datetime	NULL
-);
-
-CREATE TABLE `user` (
-	`id`	int(10)	NOT NULL,
-	`name`	varchar(10)	NOT NULL,
-	`email`	varchar(50)	NOT NULL,
-	`regtime`	datetime	NULL,
-	`edittime`	datetime	NULL
-);
-
-ALTER TABLE `schedule` ADD CONSTRAINT `PK_SCHEDULE` PRIMARY KEY (
-	`id`,
-	`userid`
-);
-
-ALTER TABLE `user` ADD CONSTRAINT `PK_USER` PRIMARY KEY (
-	`id`
-);
-
-ALTER TABLE `schedule` ADD CONSTRAINT `FK_user_TO_schedule_1` FOREIGN KEY (
-	`userid`
-)
-REFERENCES `user` (
-	`id`
-);
--->
-use schedule;
-
-# CREATE TABLE memo
-# (
-#     id       BIGINT       AUTO_INCREMENT PRIMARY KEY COMMENT '메모 식별자',
-#     title    VARCHAR(100) NOT NULL COMMENT '제목',
-#     contents TEXT COMMENT '내용'
-# );
-
+-- 테이블 생성 QUERY
 CREATE TABLE schedule
 (
     id       BIGINT AUTO_INCREMENT primary key comment '일정 식별자',
@@ -321,20 +295,20 @@ ALTER TABLE `schedule` ADD CONSTRAINT `FK_user_TO_schedule_1` FOREIGN KEY (
 
 
 -- 일정 생성 QUERY
-INSERT INTO SCHEDULE (PASSWD, TITLE, CONTENT, USERID, REGTIME, EDITTIME)
-	       VALUE (:PASSWD, :TITLE, :CONTENT, :USERID, SYSDATE(), SYSDATE())
+INSERT INTO SCHEDULE (PASSWD, TITLE, CONTENT, USER_ID, REGTIME, EDITTIME)
+	       VALUE (:PASSWD, :TITLE, :CONTENT, :USER_ID, SYSDATE(), SYSDATE())
 
 
 -- 전체 일정 조회 QUERY
-SELECT ID, PASSWD, TITLE, CONTENT, USERID, REGTIME, EDITTIME
+SELECT ID, PASSWD, TITLE, CONTENT, USER_ID, REGTIME, EDITTIME
   FROM SCHEDULE
- WHERE DATE(EDITTIME) = :EDITTIME
-   AND USERID = :USERID
+ WHERE DATE_FORMAT(EDITTIME, '%Y-%m-%d') = :EDITTIME
+    OR USER_ID = :USER_ID
  ORDER BY EDITTIME DESC
 
 
 -- 선택 일정 조회 QUERY
-SELECT ID, PASSWD, TITLE, CONTENT, USERID, REGTIME, EDITTIME
+SELECT *
   FROM SCHEDULE
  WHERE ID = :ID
 
@@ -343,12 +317,12 @@ SELECT ID, PASSWD, TITLE, CONTENT, USERID, REGTIME, EDITTIME
 UPDATE SCHEDULE
    SET TITLE = :TITLE,
        CONTENT = :CONTENT,
-       USERID = :USERID,
+       USER_ID = :USER_ID,
        EDITTIME = SYSDATE()
  WHERE ID = :ID
 
 
 -- 선택 일정 삭제 QUERY
-DELETE SCHEDULE
+DELETE FROM SCHEDULE
  WHERE ID = :ID
 ```
